@@ -21,14 +21,24 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Define a mesh, a sphere and and FX
 	UPROPERTY(VisibleAnywhere, category = "Components");
 	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(VisibleAnywhere, category = "Components");
 	USphereComponent* SphereComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "VisualFX");
+	UParticleSystem* PickupFX;
+
+	// Play the set FX
+	void PlayEffect();
+
+	// Call when overlap
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//
 
 };

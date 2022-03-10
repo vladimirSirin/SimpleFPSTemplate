@@ -58,6 +58,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	UParticleSystem* MuzzleFlash;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Gameplay");
+	bool bIsCarringObjective;
+
 	virtual void Landed(const FHitResult& Hit) override;
 
 	virtual void OnJumped_Implementation() override;
