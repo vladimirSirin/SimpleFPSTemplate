@@ -1,6 +1,6 @@
 # Learning C++ creating a simple FPS game.
 This is a C++ project based the simple fps template,
-using as a practice project.
+using as a practice project in Unreal Engine 5.0.
 
 # Based on:
 ## SimpleFPSTemplate
