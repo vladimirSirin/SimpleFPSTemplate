@@ -26,11 +26,20 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components");
 	UStaticMeshComponent* MeshComp;
 
-	UPROPERTY(VisibleAnywhere, category = "Components");
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Components");
 	USphereComponent* InnerSphereComp;
 
-	UPROPERTY(VisibleAnywhere, category = "Components");
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Components");
 	USphereComponent* OuterSphereComp;
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay");
+	float GravityStrength;
+
+	// Apply a radial force towards the black hole center
+	void ApplyRadialForceWithinOuterSphere(float Strength);
+
+	// destroy entities get inside the inner sphere
+	void DestroyWithinInnerSphere();
 
 
 public:	

@@ -9,7 +9,7 @@ AFPSBlackHole::AFPSBlackHole()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Setup a static mesh component for the black hole centre
+	// Setup a static mesh component for the black hole center
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComp;
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -37,10 +37,40 @@ void AFPSBlackHole::BeginPlay()
 	
 }
 
+// Applying Gravity from the center of the black hole to any object within radius of outer sphere.
+void AFPSBlackHole::ApplyRadialForceWithinOuterSphere(float Strength)
+{
+	TArray<UPrimitiveComponent*> OverlappingComps;
+	OuterSphereComp->GetOverlappingComponents(OverlappingComps);
+	if (!OverlappingComps.IsEmpty())
+	{
+		for (UPrimitiveComponent* Comp : OverlappingComps)
+		{
+			Comp->AddRadialForce(GetActorLocation(), OuterSphereComp->GetScaledSphereRadius(), Strength*Comp->GetMass(), RIF_Constant, false);
+		}
+	}
+
+}
+
+void AFPSBlackHole::DestroyWithinInnerSphere()
+{
+	TArray<UPrimitiveComponent*> OverlappingComps;
+	InnerSphereComp->GetOverlappingComponents(OverlappingComps);
+	if (!OverlappingComps.IsEmpty())
+	{
+		for (UPrimitiveComponent* Comp : OverlappingComps)
+		{
+			Comp->GetAttachmentRootActor()->Destroy(true);
+		}
+	}
+}
+
 // Called every frame
 void AFPSBlackHole::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
+	ApplyRadialForceWithinOuterSphere(GravityStrength);
+	DestroyWithinInnerSphere();
 
+}
