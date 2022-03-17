@@ -4,6 +4,7 @@
 #include "FPSHUD.h"
 #include "FPSCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 AFPSGameMode::AFPSGameMode()
 {
@@ -13,4 +14,41 @@ AFPSGameMode::AFPSGameMode()
 
 	// use our custom HUD class
 	HUDClass = AFPSHUD::StaticClass();
+}
+
+void AFPSGameMode::CompleteMission(APawn* PawnInstigator, bool bIsMissionScucess)
+{
+	if (PawnInstigator == nullptr)
+	{
+		return;
+	}
+	
+	APlayerController* PlayerController = Cast<APlayerController>(PawnInstigator->GetController());
+
+	if (PlayerController)
+	{
+		if (SpectatingViewingTarget)
+		{
+			AActor* ViewingTargetActor = UGameplayStatics::GetActorOfClass(this, SpectatingViewingTarget);
+
+			if (ViewingTargetActor != nullptr)
+			{
+				PlayerController->SetViewTargetWithBlend(ViewingTargetActor, 0.5f, VTBlend_Cubic, 1.0F, false);
+				PawnInstigator->DisableInput(nullptr);
+			}
+
+			else
+			{
+				UE_LOG(LogTemp, Log, TEXT("There is no viewing target actor in scene, pls create one!"));
+			}
+		}
+
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("Missing SpectatingViewingTarget Class, pls set this up in the Gamemode file."));
+		}
+	}
+
+	OnMissionComplete(PawnInstigator, bIsMissionScucess);
+
 }
