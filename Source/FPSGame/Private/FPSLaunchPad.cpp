@@ -22,7 +22,7 @@ AFPSLaunchPad::AFPSLaunchPad()
 	OverlapComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlapping Box"));
 	OverlapComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	OverlapComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	OverlapComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	OverlapComp->SetCollisionResponseToChannels(ECR_Overlap);
 	OverlapComp->SetBoxExtent(FVector(100.0F));
 	OverlapComp->SetHiddenInGame(false);
 	OverlapComp->SetupAttachment(RootComponent);
@@ -40,11 +40,6 @@ void AFPSLaunchPad::BeginPlay()
 
 void AFPSLaunchPad::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!OtherActor)
-	{
-		return;
-	}
-	
 	AFPSCharacter* PlayerPawn = Cast<AFPSCharacter>(OtherActor);
 	
 	if (PlayerPawn)
@@ -52,11 +47,11 @@ void AFPSLaunchPad::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		PlayLaunchFX();
 		PlayerPawn->LaunchCharacter(LaunchStrength, true, true);
 	}
-	else if (OtherComp)
+	else if(OtherComp && OtherComp->IsSimulatingPhysics())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Overlapping with an non-pawn actor!"))
+		UE_LOG(LogTemp, Log, TEXT("Overlapping with an non-pawn actor!"));
 		PlayLaunchFX();
-		OtherComp->AddForce(LaunchStrength*OtherComp->GetMass(), FName(), false);
+		OtherComp->AddImpulse(LaunchStrength, FName(), true);
 	}
 	
 
