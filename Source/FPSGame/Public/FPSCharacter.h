@@ -13,6 +13,7 @@ class AFPSProjectile;
 class USoundBase;
 class UAnimSequence;
 class UParticleSystem;
+class UPawnNoiseEmitterComponent;
 
 
 UCLASS()
@@ -39,6 +40,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	TSubclassOf<UCameraShakeBase> JumpCameraShake;
+
+	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
+	UPawnNoiseEmitterComponent* NoiseEmitComp;
 
 public:
 	AFPSCharacter();

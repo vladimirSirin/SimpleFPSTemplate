@@ -28,6 +28,7 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
+
 }
 
 
@@ -55,6 +56,8 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	// Only add impulse and destroy projectile if we hit a physics object
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
+		MakeNoise(1.0f, GetInstigator());
+		
 		float RandomIntensity = FMath::RandRange(200.0f, 500.0f);
 
 		OtherComp->AddImpulseAtLocation(GetVelocity() * RandomIntensity, GetActorLocation());
