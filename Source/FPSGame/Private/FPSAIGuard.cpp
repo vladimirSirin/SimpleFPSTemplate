@@ -41,10 +41,12 @@ void AFPSAIGuard::OnSeenPawn(APawn* SeenPawn)
 
 void AFPSAIGuard::OnHeardNoise(APawn* NoiseInstigator, const FVector& Location, float Volume)
 {
+	GetWorld()->GetTimerManager().ClearTimer(NoiseAlarmTimer);
+
 	DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Red, false, 10.0f);
 	LookAtNoiseLocation(Location);
-	GetWorld()->GetTimerManager().ClearTimer(NoiseAlarmTimer);
-	GetWorld()->GetTimerManager().SetTimer(NoiseAlarmTimer, this, &AFPSAIGuard::ResetRotationToOriginal, 3.0f, false);
+
+	GetWorld()->GetTimerManager().SetTimer(NoiseAlarmTimer, this, &AFPSAIGuard::ResetRotationToOriginal, 4.0f, false);
 
 }
 
@@ -58,9 +60,9 @@ void AFPSAIGuard::LookAtNoiseLocation(FVector Location)
 	LookAtRotation.Pitch = 0.0f;
 	LookAtRotation.Roll = 0.0f;
 
-	FRotator LerpRotation = FMath::RInterpTo(GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds(), 1.0f);
+	FRotator LerpRotation = FMath::RInterpTo(GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds(), 25.0f);
 
-	this->SetActorRotation(LerpRotation);
+	SetActorRotation(LerpRotation);
 }
 
 
