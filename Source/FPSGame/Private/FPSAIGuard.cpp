@@ -20,7 +20,12 @@ AFPSAIGuard::AFPSAIGuard()
 void AFPSAIGuard::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OriginalRotation = GetActorRotation();
+}
+
+void AFPSAIGuard::ResetRotationToOriginal()
+{
+	SetActorRotation(OriginalRotation);
 }
 
 // Called whens seeing a player pawn
@@ -31,12 +36,35 @@ void AFPSAIGuard::OnSeenPawn(APawn* SeenPawn)
 		return;
 	}
 	DrawDebugSphere(GetWorld(), SeenPawn->GetActorLocation(), 32.0f, 12, FColor::Yellow, false, 10.0f);
+	
 }
 
 void AFPSAIGuard::OnHeardNoise(APawn* NoiseInstigator, const FVector& Location, float Volume)
 {
-	DrawDebugSphere(GetWorld(), NoiseInstigator->GetActorLocation(), 32.0f, 12, FColor::Red, false, 10.0f);
+	DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Red, false, 10.0f);
+	LookAtNoiseLocation(Location);
+	GetWorld()->GetTimerManager().ClearTimer(NoiseAlarmTimer);
+	GetWorld()->GetTimerManager().SetTimer(NoiseAlarmTimer, this, &AFPSAIGuard::ResetRotationToOriginal, 3.0f, false);
+
 }
+
+
+// Look at noise location.
+void AFPSAIGuard::LookAtNoiseLocation(FVector Location)
+{
+	FVector direction = Location - GetActorLocation();
+	direction.Normalize();
+	FRotator LookAtRotation = direction.Rotation();
+	LookAtRotation.Pitch = 0.0f;
+	LookAtRotation.Roll = 0.0f;
+
+	FRotator LerpRotation = FMath::RInterpTo(GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds(), 1.0f);
+
+	this->SetActorRotation(LerpRotation);
+}
+
+
+
 
 // Called every frame
 void AFPSAIGuard::Tick(float DeltaTime)

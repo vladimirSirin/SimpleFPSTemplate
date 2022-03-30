@@ -24,11 +24,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
+	UPROPERTY()
+	FTimerHandle NoiseAlarmTimer;
+	
+	UPROPERTY()
+	FRotator OriginalRotation;
+
+	UFUNCTION()
+	void ResetRotationToOriginal();
+
 	UFUNCTION()
 	void OnSeenPawn(APawn* SeenPawn);
 
 	UFUNCTION()
 	void OnHeardNoise(APawn* NoiseInstigator, const FVector& Location, float Volume);
+
+	UFUNCTION()
+	void LookAtNoiseLocation(FVector Location);
+
 
 public:	
 	// Called every frame
