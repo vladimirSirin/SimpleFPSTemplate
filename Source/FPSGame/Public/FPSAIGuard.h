@@ -8,6 +8,14 @@
 
 class UPawnSensingComponent;
 
+UENUM(BlueprintType)
+enum class EAIState: uint8
+{
+	Relax,
+	Suspicious,
+	Alerted
+};
+
 UCLASS()
 class FPSGAME_API AFPSAIGuard : public ACharacter
 {
@@ -30,6 +38,9 @@ protected:
 	UPROPERTY()
 	FRotator OriginalRotation;
 
+	UPROPERTY()
+	EAIState CurrentAIState;
+
 	UFUNCTION()
 	void ResetRotationToOriginal();
 
@@ -41,6 +52,12 @@ protected:
 
 	UFUNCTION()
 	void LookAtNoiseLocation(FVector Location);
+
+	UFUNCTION()
+	void SetAIState(EAIState state);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Gameplay")
+	void OnAIstateSet(EAIState state);
 
 
 public:	
