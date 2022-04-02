@@ -28,6 +28,9 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
+
+	SetReplicates(true);
+	SetReplicateMovement(true);
 }
 
 
