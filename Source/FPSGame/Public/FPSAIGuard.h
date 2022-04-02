@@ -33,7 +33,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Gameplay", meta = (EditCondition = "bIsPatrol"))
 	TArray<ATargetPoint*> GuardPatrolPoints;
 
 	UPROPERTY()
@@ -44,6 +44,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	EAIState CurrentAIState;
+
+	UPROPERTY(EditInstanceOnly, Category = "Gameplay")
+	bool bIsPatrol;
 
 	UPROPERTY(BlueprintReadWrite)
 	ATargetPoint* CurrentWaypoint;
