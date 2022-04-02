@@ -51,6 +51,17 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 }
 
 
+void AFPSCharacter::Tick(float Deltatime)
+{
+	Super::Tick(Deltatime);
+	if (!IsLocallyControlled())
+	{
+		FRotator Rot = CameraComponent->GetRelativeRotation();
+		Rot.Pitch = RemoteViewPitch * 360.0f / 255.0f;
+		CameraComponent->SetRelativeRotation(Rot);
+	}
+}
+
 void AFPSCharacter::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
