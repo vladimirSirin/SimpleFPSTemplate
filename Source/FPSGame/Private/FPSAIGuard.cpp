@@ -4,6 +4,7 @@
 #include "FPSAIGuard.h"
 #include "Perception/PawnSensingComponent.h"
 #include "FPSGameMode.h"
+#include <AIController.h>
 
 // Sets default values
 AFPSAIGuard::AFPSAIGuard()
@@ -15,6 +16,7 @@ AFPSAIGuard::AFPSAIGuard()
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnSeenPawn);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnHeardNoise);
 
+	OriginalRotation = GetActorRotation();
 	CurrentAIState = EAIState::Relax;
 
 }
@@ -23,7 +25,10 @@ AFPSAIGuard::AFPSAIGuard()
 void AFPSAIGuard::BeginPlay()
 {
 	Super::BeginPlay();
-	OriginalRotation = GetActorRotation();
+	if (!GuardPatrolPoints.IsEmpty())
+	{
+		CurrentWaypoint = GuardPatrolPoints[0];
+	}
 }
 
 void AFPSAIGuard::ResetRotationToOriginal()
@@ -88,11 +93,30 @@ void AFPSAIGuard::SetAIState(EAIState state)
 	OnAIstateSet(state);
 }
 
+ATargetPoint* AFPSAIGuard::GetNextWaypoint(TArray<ATargetPoint*> PatrolPoints, ATargetPoint* Waypoint)
+{
+	if (PatrolPoints.Num() == 0 || CurrentWaypoint == nullptr)
+	{
+		return nullptr;
+	}
+
+	int Currentindex = PatrolPoints.Find(CurrentWaypoint);
+	
+
+	if ((Currentindex + 1) < PatrolPoints.Num())
+	{
+		return PatrolPoints[Currentindex+1];
+	}
+	else
+	{
+		return PatrolPoints[0];
+	}
+}
+
 // Called every frame
 void AFPSAIGuard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

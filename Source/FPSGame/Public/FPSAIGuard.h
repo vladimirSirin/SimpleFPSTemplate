@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "FPSAIGuard.generated.h"
 
+class ATargetPoint;
 class UPawnSensingComponent;
 
 UENUM(BlueprintType)
@@ -32,14 +33,20 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	TArray<ATargetPoint*> GuardPatrolPoints;
+
 	UPROPERTY()
 	FTimerHandle NoiseAlarmTimer;
 	
 	UPROPERTY()
 	FRotator OriginalRotation;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	EAIState CurrentAIState;
+
+	UPROPERTY(BlueprintReadWrite)
+	ATargetPoint* CurrentWaypoint;
 
 	UFUNCTION()
 	void ResetRotationToOriginal();
@@ -58,6 +65,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Gameplay")
 	void OnAIstateSet(EAIState state);
+
+	UFUNCTION(BlueprintCallable)
+	ATargetPoint* GetNextWaypoint(TArray<ATargetPoint*> PatrolPoints, ATargetPoint* Waypoint);
 
 
 public:	
