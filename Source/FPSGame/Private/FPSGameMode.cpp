@@ -5,6 +5,7 @@
 #include "FPSCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "FPSGameState.h"
 
 AFPSGameMode::AFPSGameMode()
 {
@@ -14,6 +15,7 @@ AFPSGameMode::AFPSGameMode()
 
 	// use our custom HUD class
 	HUDClass = AFPSHUD::StaticClass();
+	GameStateClass = AFPSGameState::StaticClass();
 }
 
 void AFPSGameMode::CompleteMission(APawn* PawnInstigator, bool bIsMissionScucess)
@@ -47,6 +49,9 @@ void AFPSGameMode::CompleteMission(APawn* PawnInstigator, bool bIsMissionScucess
 		{
 			UE_LOG(LogTemp, Log, TEXT("Missing SpectatingViewingTarget Class, pls set this up in the Gamemode file."));
 		}
+
+		AFPSGameState* GS = GetGameState<AFPSGameState>();
+		GS->MultiCastOnMissionComplete(PawnInstigator, bIsMissionScucess);
 	}
 
 	OnMissionComplete(PawnInstigator, bIsMissionScucess);

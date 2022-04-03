@@ -16,6 +16,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Spectating")
 	TSubclassOf<AActor> SpectatingViewingTarget;
 
+
 public:
 
 	AFPSGameMode();
