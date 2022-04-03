@@ -42,14 +42,14 @@ protected:
 	UPROPERTY()
 	FRotator OriginalRotation;
 
-	UPROPERTY(BlueprintReadOnly)
-	EAIState CurrentAIState;
-
 	UPROPERTY(EditInstanceOnly, Category = "Gameplay")
 	bool bIsPatrol;
 
 	UPROPERTY(BlueprintReadWrite)
 	ATargetPoint* CurrentWaypoint;
+
+	UPROPERTY(ReplicatedUsing=OnRep_GuardState)
+	EAIState CurrentAIState;
 
 	UFUNCTION()
 	void ResetRotationToOriginal();
@@ -66,11 +66,16 @@ protected:
 	UFUNCTION()
 	void SetAIState(EAIState state);
 
+	UFUNCTION()
+	void OnRep_GuardState();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Gameplay")
 	void OnAIstateSet(EAIState state);
 
 	UFUNCTION(BlueprintCallable)
 	ATargetPoint* GetNextWaypoint(TArray<ATargetPoint*> PatrolPoints, ATargetPoint* Waypoint);
+
+	//void AFPSAIGuard::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
 
 
 public:	

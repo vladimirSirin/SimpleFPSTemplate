@@ -5,6 +5,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "FPSGameMode.h"
 #include <AIController.h>
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AFPSAIGuard::AFPSAIGuard()
@@ -90,7 +91,12 @@ void AFPSAIGuard::SetAIState(EAIState state)
 		return;
 	}
 	CurrentAIState = state;
-	OnAIstateSet(state);
+	OnRep_GuardState();
+}
+
+void AFPSAIGuard::OnRep_GuardState()
+{
+	OnAIstateSet(CurrentAIState);
 }
 
 ATargetPoint* AFPSAIGuard::GetNextWaypoint(TArray<ATargetPoint*> PatrolPoints, ATargetPoint* Waypoint)
@@ -125,4 +131,13 @@ void AFPSAIGuard::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+
+void AFPSAIGuard::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFPSAIGuard, CurrentAIState);
+}
+
 
