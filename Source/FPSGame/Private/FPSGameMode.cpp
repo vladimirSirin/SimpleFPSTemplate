@@ -35,8 +35,11 @@ void AFPSGameMode::CompleteMission(APawn* PawnInstigator, bool bIsMissionScucess
 
 			if (ViewingTargetActor != nullptr)
 			{
-				PlayerController->SetViewTargetWithBlend(ViewingTargetActor, 0.5f, VTBlend_Cubic, 1.0F, false);
-				PawnInstigator->DisableInput(nullptr);
+				for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++)
+				{
+					APlayerController* PC = It->Get();
+					PC->SetViewTargetWithBlend(ViewingTargetActor, 0.5f, VTBlend_Cubic, 1.0F, false);
+				}
 			}
 
 			else
@@ -53,7 +56,4 @@ void AFPSGameMode::CompleteMission(APawn* PawnInstigator, bool bIsMissionScucess
 		AFPSGameState* GS = GetGameState<AFPSGameState>();
 		GS->MultiCastOnMissionComplete(PawnInstigator, bIsMissionScucess);
 	}
-
-	OnMissionComplete(PawnInstigator, bIsMissionScucess);
-
 }
