@@ -65,7 +65,7 @@ void AFPSLaunchPad::PlayLaunchFX()
 	if (LaunchFX)
 	{
 		UParticleSystemComponent* SpawnedFX = UGameplayStatics::SpawnEmitterAtLocation(this, LaunchFX, GetActorLocation());
-		SpawnedFX->SetRelativeScale3D(LaunchFXsize);
+		//SpawnedFX->SetRelativeScale3D(LaunchFXsize);
 	}
 	else
 	{
